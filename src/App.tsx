@@ -29,7 +29,7 @@ const App = () => {
         </div>
 
       </main>
-      <ToastContainer closeOnClick={false} closeButton={true} />
+      <ToastContainer closeOnClick={false} closeButton={false} />
     </>
   )
 }

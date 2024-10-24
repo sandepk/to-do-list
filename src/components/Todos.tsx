@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { TodoType, useTodos } from '../store/todos'
 import { useSearchParams } from 'react-router-dom'
 import Todo from './Todo';
@@ -31,7 +30,8 @@ const Todos = ({ searchTodoText }: { searchTodoText: string }) => {
     }
     const handleDeletionOfTodo = (id: string) => {
        toBeRemoved.push(id);
-        toast(<Undo onUndo={() => (toBeRemoved = toBeRemoved.filter(t_id => t_id !== id))} />, {
+       const todoToBeDeleted = filteredTodos.find(todo => todo.id === id) as TodoType
+        toast(<Undo onUndo={() => (toBeRemoved = toBeRemoved.filter(t_id => t_id !== id))} todo={todoToBeDeleted} />, {
             // hook will be called whent the component unmount
             onClose: () => allowDeletionOfTodo(id)
         });
@@ -42,10 +42,11 @@ const Todos = ({ searchTodoText }: { searchTodoText: string }) => {
     type UndoPropTypes = {
         onUndo: () => void;
         closeToast: () => void;
+        todo: TodoType;
     }
 
     // create a Undo Component for toast on deletion
-    const Undo = ({ onUndo, closeToast }: UndoPropTypes) => {
+    const Undo = ({ onUndo, closeToast, todo }: UndoPropTypes) => {
         const handleClick = () => {
             onUndo();
             closeToast();
@@ -57,7 +58,7 @@ const Todos = ({ searchTodoText }: { searchTodoText: string }) => {
         return (
             <div>
                 <h3 className='flex justify-between items-center px-2'>
-                    Row Deleted <button className="focus:outline-none text-white bg-gray-700 bg-gray-400 hover:bg-gray-500 font-medium rounded-lg text-sm px-3 py-2" onClick={handleClick}>UNDO</button>
+                    {`Todo '${todo.task}' will be Deleted. Do you want to undo ?`} <button className="focus:outline-none text-white bg-gray-700 bg-gray-400 hover:bg-gray-500 font-medium rounded-lg text-sm px-3 py-2" onClick={handleClick}>UNDO</button>
                 </h3>
             </div>
         );
